@@ -3,6 +3,7 @@ import ToDoListReducer from './reducers/ToDoListReducer'
 import LoadingReducer from './reducers/LoadingReducer'
 import ModalReducer from './reducers/ModalReducer'
 import UserCyberBugsReducer from './reducers/UserCyberBugsReducer'
+import ProjectCategoryReducer from './reducers/ProjectCategoryReducer'
 import reduxThunk from 'redux-thunk'
 
 //middleWare saga
@@ -18,6 +19,7 @@ const rootReducer = combineReducers({
     LoadingReducer,
     ModalReducer,
     UserCyberBugsReducer,
+    ProjectCategoryReducer
 })
 
 const store = createStore(rootReducer, applyMiddleware(reduxThunk, middleWareSaga));

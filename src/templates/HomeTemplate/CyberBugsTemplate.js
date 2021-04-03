@@ -13,7 +13,7 @@ export const CyberBugsTemplate = (props) => {
     //propsRoute chua cac thuoc tinh cua the Route: history, put, ...
     return <Route {...restParam} render={(propsRoute) => {
         return <>
-            <div class="jira">
+            <div className="jira">
                 <SidebarCyberbugs />
                 <MenuCyberbugs />
                     <Component {...propsRoute} />

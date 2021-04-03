@@ -1,19 +1,42 @@
-import React from 'react'
+/* eslint-disable no-multi-str */
+import React,{useEffect} from 'react';
 import { Editor } from '@tinymce/tinymce-react';
+import {  withFormik } from 'formik';
+import * as Yup  from 'yup'
+import {connect,useSelector,useDispatch} from 'react-redux'
 
-export default function CreateProject(props) {
+function CreateProject(props) {
 
+    const arrProjectCategory = useSelector(state => state.ProjectCategoryReducer.arrProjectCategory);
+    const dispatch = useDispatch();
+
+  
+    const {
+        values,
+        touched,
+        errors,
+        handleChange,
+        handleBlur,
+        handleSubmit,
+        setFieldValue,
+
+    } = props;
+
+
+    useEffect(()=>{ 
+        //Gọi api để lấy dữ liệu thẻ select
+        dispatch({type:'GET_ALL_PROJECT_CATEGORY_SAGA'})
+    },[]);
 
     const handleEditorChange = (content, editor) => {
-        console.log('Content was updated:', content);
-        console.log('Content was updated:', editor);
+        setFieldValue('description', content);
     }
 
 
     return (
         <div className="container m-5">
             <h3>CreateProject</h3>
-            <form className="container">
+            <form className="container" onSubmit={handleSubmit} onChange={handleChange}>
                 <div className="form-group">
                     <p>Name</p>
                     <input className="form-control" name="projectName" />
@@ -21,9 +44,12 @@ export default function CreateProject(props) {
                 <div className="form-group">
                     <p>Description</p>
                     <Editor
+
                         name="description"
-                        initialValue=""
+                     
                         init={{
+                            selector: 'textarea#myTextArea',
+                            
                             height: 500,
                             menubar: false,
                             plugins: [
@@ -41,9 +67,9 @@ export default function CreateProject(props) {
                 </div>
                 <div className="form-group">
                     <select name="categoryId" className="form-control">
-                        <option>Software</option>
-                        <option>Web</option>
-                        <option>App</option>
+                        {arrProjectCategory.map((item,index)=> {
+                            return <option value={item.id} key={index}>{item.projectCategoryName}</option>
+                        }) }
                     </select>
                 </div>
                 <button className="btn btn-outline-primary" type="submit">Create project</button>
@@ -51,3 +77,39 @@ export default function CreateProject(props) {
         </div>
     )
 }
+
+
+
+const createProjectForm = withFormik({
+    enableReinitialize: true, //ham se chay lai khi props cua redux change => cap nhat categoryId
+    mapPropsToValues: (props) => {
+        console.log('propvalue', props)
+        return {
+            projectName: '',
+            description: '',
+            categoryId: props.arrProjectCategory[0]?.id
+        }
+    },
+    validationSchema: Yup.object().shape({
+   
+
+    }),
+    handleSubmit: (values, { props, setSubmitting }) => {
+
+        props.dispatch({
+            type: 'CREATE_PROJECT_SAGA',
+            newProject: values
+        })
+
+    },
+    displayName: 'CreateProjectFormik',
+})(CreateProject);
+
+const mapStateToProps = (state) => ({
+
+    arrProjectCategory: state.ProjectCategoryReducer.arrProjectCategory
+
+})
+
+
+export default connect(mapStateToProps)(createProjectForm);

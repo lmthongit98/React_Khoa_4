@@ -1,5 +1,5 @@
 import axios from 'axios'
-import {DOMAIN_CYBERBUG} from '../util/constants/settingSystem'
+import {DOMAIN_CYBERBUG, TOKEN} from '../util/constants/settingSystem'
 
 export class CyberBugsService{
     constructor(){ 
@@ -14,27 +14,29 @@ export class CyberBugsService{
         })
     }
 
-    // addTaskApi = (taskName) => {
-    //     return  axios({
-    //         url: `${DOMAIN_CYBERBUG}/ToDoList/AddTask`,
-    //         method: 'POST',
-    //         data: { taskName: taskName }
-    //     })
-    // }
+    getAllProjectCategory = (taskName) => {
+        return  axios({
+            url: `${DOMAIN_CYBERBUG}/ProjectCategory`,
+            method: 'GET'
+        })
+    }
 
-    // deleteTaskApi = (taskName) => {
-    //     return axios({
-    //         url: `${DOMAIN_CYBERBUG}/ToDoList/deleteTask?taskName=${taskName}`,
-    //         method: 'DELETE'
-    //     })
-    // }
+    createProject  = (newProject) => {
+        return axios({
+            url: `${DOMAIN_CYBERBUG}/Project/createProject`,
+            method: 'POST',
+            data: newProject
+        })
+    }
 
-    // doneTaskApi = (taskName) => {
-    //     return axios({
-    //         url: `${DOMAIN_CYBERBUG}/ToDoList/doneTask?taskName=${taskName}`,
-    //         method: 'PUT'
-    //     })
-    // }
+    createProjectAuthorize = (newProject) => {
+        return axios({
+            url: `${DOMAIN_CYBERBUG}/Project/createProjectAuthorize`,
+            method: 'POST',
+            data: newProject,
+            headers: {'Authorization': 'Bearer ' + localStorage.getItem(TOKEN)} //JWT
+        })
+    }
     
     // rejectTaskApi = (taskName) => {
     //     return axios({
