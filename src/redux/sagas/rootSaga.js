@@ -1,5 +1,6 @@
 import { all, fork, put, take, takeLatest } from 'redux-saga/effects'
 import * as ToDoListSaga from './ToDoListSaga'
+import * as CyberBugs from './cyberbugs/UserCyberBugsSaga'
 
 
 export function* rootSaga() {
@@ -10,5 +11,8 @@ export function* rootSaga() {
         ToDoListSaga.theoDoiActionDeleteTaskApi(),
         ToDoListSaga.theoDoiActionDoneTaskApi(),
         ToDoListSaga.theoDoiActionRejectTaskApi(),
+
+        //Cyberbugs
+        CyberBugs.theoDoiSignIn(),
    ])
 }

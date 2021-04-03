@@ -7,7 +7,7 @@ export const HomeTemplate = (props) => {
 
     const {Component, ...restParam} = props;
 
-    //propsRoute chua cac thuoc tinh cua the Route
+    //propsRoute chua cac thuoc tinh cua the Route: history, put, ...
     return <Route {...restParam} render={(propsRoute) => {
         return <>
             <Header/>

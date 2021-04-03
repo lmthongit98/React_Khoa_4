@@ -1,10 +1,11 @@
-import { BrowserRouter, Route, Switch } from 'react-router-dom'
+import { BrowserRouter, Route, Switch, useHistory } from 'react-router-dom'
 import LoadingComponent from './components/GlobalSetting/LoadingComponent/LoadingComponent'
 import Header from './components/home/header/Header'
 import Modal from './HOC/Modal/Modal'
 import About from './pages/about/About'
 import BaiTapToDoListSaga from './pages/BaiTapToDoListSaga/BaiTapToDoListSaga'
 import Contact from './pages/contact/Contact'
+import LoginCyberBugs from './pages/CyberBugs/LoginCyberBugs/LoginCyberBugs'
 import DemoHOCModal from './pages/DemoHOCModal/DemoHOCModal'
 import Detail from './pages/detail/Detail'
 import Home from './pages/home/Home'
@@ -15,9 +16,17 @@ import ToDoListRCC from './pages/todolist/TodolistRCC'
 import ToDoListRedux from './pages/todolist/ToDoListRedux'
 import ToDoListRFC from './pages/todolist/ToDoListRFC'
 import { HomeTemplate } from './templates/HomeTemplate/HomeTeamplate'
+import { UserLoginTemplate } from './templates/HomeTemplate/UserLoginTemplate'
+import React from 'react'
+import { CyberBugsTemplate } from './templates/HomeTemplate/CyberBugsTemplate'
+import indexCyberBugs from './redux/sagas/cyberbugs/indexCyberBugs'
+import CreateProject from './pages/CyberBugs/CreateProject/CreateProject'
+
+
 function App() {
+
   return (
-    <BrowserRouter>
+    <>
       <Modal/>
       <Switch>
 
@@ -30,18 +39,22 @@ function App() {
 
         <HomeTemplate exact path="/home" Component = {Home} />
         <HomeTemplate exact path='/about' Component={About} />
-        <Route exact path='/contact' component={Contact} />
-        <Route exact path='/login' component={Login} />
-        <Route exact path='/detail/:id' component={Detail} />
-        <Route exact path='/profile' component={Profile} />
-        <Route exact path='/todolistrfc' component={ToDoListRFC} />
-        <Route exact path='/todolistrcc' component={ToDoListRCC} />
-        <Route exact path='/todolistredux' component={ToDoListRedux} />
-        <Route exact path='/todolistsaga' component={BaiTapToDoListSaga} />
-        <Route exact path='/demohocmodal' component={DemoHOCModal} />
-        <Route exact path='*' component={PageNotFound} />
+        <UserLoginTemplate exact path='/login' Component={LoginCyberBugs}/>
+        <HomeTemplate exact path='/contact' Component={Contact} />
+        <UserLoginTemplate exact path='/login' Component={Login} />
+        <HomeTemplate exact path='/detail/:id' Component={Detail} />
+        <HomeTemplate exact path='/profile' Component={Profile} />
+        <HomeTemplate exact path='/todolistrfc' Component={ToDoListRFC} />
+        <HomeTemplate exact path='/todolistrcc' Component={ToDoListRCC} />
+        <HomeTemplate exact path='/todolistredux' Component={ToDoListRedux} />
+        <HomeTemplate exact path='/todolistsaga' Component={BaiTapToDoListSaga} />
+        <HomeTemplate exact path='/demohocmodal' Component={DemoHOCModal} />
+        <CyberBugsTemplate exact path='/cyberbugs' Component={indexCyberBugs}/>
+        <CyberBugsTemplate exact path='/createproject' Component={CreateProject} />
+        <HomeTemplate exact path='/' Component={Home} />
+        <HomeTemplate exact path='*' component={PageNotFound} />
       </Switch>
-    </BrowserRouter>
+    </>
   );
 }
 
