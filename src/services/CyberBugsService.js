@@ -38,12 +38,13 @@ export class CyberBugsService{
         })
     }
     
-    // rejectTaskApi = (taskName) => {
-    //     return axios({
-    //         url: `${DOMAIN_CYBERBUG}/ToDoList/rejectTask?taskName=${taskName}`,
-    //         method: 'PUT'
-    //     })
-    // }
+    getListProjectSaga = () => {
+        return axios({
+            url: `${DOMAIN_CYBERBUG}/Project/getAllProject`,
+            method: 'GET',
+            headers: {'Authorization': 'Bearer ' + localStorage.getItem(TOKEN)} //JWT
+        })
+    }
 }
 
 export const cyberBugsService = new CyberBugsService();

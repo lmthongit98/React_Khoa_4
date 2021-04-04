@@ -21,6 +21,7 @@ import React from 'react'
 import { CyberBugsTemplate } from './templates/HomeTemplate/CyberBugsTemplate'
 import indexCyberBugs from './redux/sagas/cyberbugs/indexCyberBugs'
 import CreateProject from './pages/CyberBugs/CreateProject/CreateProject'
+import ProjectManagement from './pages/CyberBugs/ProjectManagement/ProjectManagement'
 
 
 function App() {
@@ -51,6 +52,7 @@ function App() {
         <HomeTemplate exact path='/demohocmodal' Component={DemoHOCModal} />
         <CyberBugsTemplate exact path='/cyberbugs' Component={indexCyberBugs}/>
         <CyberBugsTemplate exact path='/createproject' Component={CreateProject} />
+        <CyberBugsTemplate exact path='/projectmanagement' Component={ProjectManagement} />
         <HomeTemplate exact path='/' Component={Home} />
         <HomeTemplate exact path='*' component={PageNotFound} />
       </Switch>

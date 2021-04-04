@@ -1,132 +1,22 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Table, Tag, Space, Button } from 'antd';
 import ReactHtmlParser from "react-html-parser";
 import { FormOutlined, DeleteOutlined } from '@ant-design/icons'
+import {useSelector, useDispatch} from 'react-redux'
 
-const data = [
-    {
-        "id": 1,
-        "projectName": "Web jira",
-        "description": "web quản lý task dự án",
-        "categoryId": 1,
-        "alias": "web-jira",
-        "deleted": false
-    },
-    {
-        "id": 2,
-        "projectName": "App jira",
-        "description": "app quản lý task dự án",
-        "categoryId": 3,
-        "alias": "app-jira",
-        "deleted": false
-    },
-    {
-        "id": 3,
-        "projectName": "Phần mềm jira",
-        "description": "phần mềm quản lý công việc",
-        "categoryId": 2,
-        "alias": "phan-mem-jira",
-        "deleted": false
-    },
-    {
-        "id": 4,
-        "projectName": "string",
-        "description": "string",
-        "categoryId": 1,
-        "alias": "string",
-        "deleted": false
-    },
-    {
-        "id": 5,
-        "projectName": "project name",
-        "description": "<p>adskajdksjahd</p>",
-        "categoryId": 2,
-        "alias": "project-name",
-        "deleted": false
-    },
-    {
-        "id": 6,
-        "projectName": "newproject123",
-        "description": "<p>dsadsada</p>",
-        "categoryId": 1,
-        "alias": "newproject123",
-        "deleted": false
-    },
-    {
-        "id": 7,
-        "projectName": "thoa",
-        "description": "<p>front end remote</p>",
-        "categoryId": 1,
-        "alias": "thoa",
-        "deleted": false
-    },
-    {
-        "id": 8,
-        "projectName": "alice",
-        "description": "<p>test post</p>",
-        "categoryId": 1,
-        "alias": "alice",
-        "deleted": false
-    },
-    {
-        "id": 9,
-        "projectName": "alice nguyen",
-        "description": "<p>323</p>",
-        "categoryId": 1,
-        "alias": "alice-nguyen",
-        "deleted": false
-    },
-    {
-        "id": 10,
-        "projectName": "truc ng",
-        "description": "<p>react</p>",
-        "categoryId": 1,
-        "alias": "truc-ng",
-        "deleted": false
-    },
-    {
-        "id": 11,
-        "projectName": "nguyen phuc loc ",
-        "description": "<p>react</p>",
-        "categoryId": 1,
-        "alias": "nguyen-phuc-loc",
-        "deleted": false
-    },
-    {
-        "id": 12,
-        "projectName": "",
-        "description": "",
-        "categoryId": 1,
-        "alias": "",
-        "deleted": false
-    },
-    {
-        "id": 13,
-        "projectName": "dfs",
-        "description": "<p>dfa</p>",
-        "categoryId": 1,
-        "alias": "dfs",
-        "deleted": false
-    },
-    {
-        "id": 14,
-        "projectName": "alice ng thanh",
-        "description": "<p>react create cyberbugs</p>",
-        "categoryId": 1,
-        "alias": "alice-ng-thanh",
-        "deleted": false
-    },
-    {
-        "id": 15,
-        "projectName": "newproject123456",
-        "description": "<p>123321321</p>",
-        "categoryId": 2,
-        "alias": "newproject123456",
-        "deleted": false
-    }
-];
 
 export default function ProjectManagement(props) {
+
+    const projectList = useSelector(state => state.ProjectCyberBugsReducer.projectList);
+
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch({
+            type: 'GET_LIST_PROJECT_SAGA'
+        })
+    }, [])
+
     const [state, setState] = useState({
         filteredInfo: null,
         sortedInfo: null,
@@ -168,25 +58,44 @@ export default function ProjectManagement(props) {
             title: 'id',
             dataIndex: 'id',
             key: 'id',
-
+            sorter: (nextItem, item) => nextItem.id - item.id,
+            sortDirections: ['descend'], //giam dan
 
         },
         {
             title: 'projectName',
             dataIndex: 'projectName',
             key: 'projectName',
+            sorter: (nextItem, item) => {
+                if(nextItem.projectName?.trim().toLowerCase() < item.projectName?.trim().toLowerCase()){
+                    return -1;
+                }
+                return 1;
+            },    
+        },
+        // {
+        //     title: 'description',
+        //     dataIndex: 'description',
+        //     // key: 'description',
+        //     render: (text, record, index) => {
+        //         let contentJSX = ReactHtmlParser(text);
 
+        //         return <div>
+        //             {contentJSX}
+        //         </div>
+        //     }
+        // },
+        {
+            title: 'category',
+            dataIndex: 'categoryName',
+            key: 'categoryName',
         },
         {
-            title: 'description',
-            dataIndex: 'description',
-            key: 'description',
+            title: 'creator',
+            dataIndex: 'creator',
+            // key: 'categoryName',
             render: (text, record, index) => {
-                let contentJSX = ReactHtmlParser(text);
-
-                return <div>
-                    {contentJSX}
-                </div>
+               return <Tag color="green">{text?.name}</Tag>
             }
         },
         {
@@ -214,7 +123,7 @@ export default function ProjectManagement(props) {
                 <Button onClick={clearFilters}>Clear filters</Button>
                 <Button onClick={clearAll}>Clear filters and sorters</Button>
             </Space>
-            <Table columns={columns} rowKey={"id"} dataSource={data} onChange={handleChange} />
+            <Table columns={columns} rowKey={"id"} dataSource={projectList} onChange={handleChange} />
         </div>
     )
 }
