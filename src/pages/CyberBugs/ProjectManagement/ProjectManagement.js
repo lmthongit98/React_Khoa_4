@@ -2,7 +2,9 @@ import React, { useEffect, useState } from 'react'
 import { Table, Tag, Space, Button } from 'antd';
 import ReactHtmlParser from "react-html-parser";
 import { FormOutlined, DeleteOutlined } from '@ant-design/icons'
-import {useSelector, useDispatch} from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
+import FormEditProject from '../../../components/Forms/FromEditProject';
+import LoadingComponent from '../../../components/GlobalSetting/LoadingComponent/LoadingComponent';
 
 
 export default function ProjectManagement(props) {
@@ -67,11 +69,11 @@ export default function ProjectManagement(props) {
             dataIndex: 'projectName',
             key: 'projectName',
             sorter: (nextItem, item) => {
-                if(nextItem.projectName?.trim().toLowerCase() < item.projectName?.trim().toLowerCase()){
+                if (nextItem.projectName?.trim().toLowerCase() < item.projectName?.trim().toLowerCase()) {
                     return -1;
                 }
                 return 1;
-            },    
+            },
         },
         // {
         //     title: 'description',
@@ -95,7 +97,7 @@ export default function ProjectManagement(props) {
             dataIndex: 'creator',
             // key: 'categoryName',
             render: (text, record, index) => {
-               return <Tag color="green">{text?.name}</Tag>
+                return <Tag color="green">{text?.name}</Tag>
             }
         },
         {
@@ -104,11 +106,22 @@ export default function ProjectManagement(props) {
             key: 'x',
             render: (text, record, index) => {
                 return <div>
-                    <button className="btn mr-2 btn-primary">
-                        <FormOutlined  style={{fontSize:17}}/>
+                    <button onClick={() => {
+                        //dispatch mo drawer va truyen component
+                        dispatch({
+                            type: 'OPEN_FORM_EDIT_PROJECT',
+                            Component: <FormEditProject />,
+                        })
+                        //dispatch goi api lay du lieu dong hien tai
+                        dispatch({
+                            type: 'EDIT_PROJECT',
+                            projectEdit: record
+                        })
+                    }} className="btn mr-2 btn-primary">
+                        <FormOutlined style={{ fontSize: 17 }} />
                     </button>
                     <button className="btn btn-danger">
-                        <DeleteOutlined style={{fontSize:17}} />
+                        <DeleteOutlined style={{ fontSize: 17 }} />
                     </button>
                 </div>
             },
@@ -124,6 +137,7 @@ export default function ProjectManagement(props) {
                 <Button onClick={clearAll}>Clear filters and sorters</Button>
             </Space>
             <Table columns={columns} rowKey={"id"} dataSource={projectList} onChange={handleChange} />
+            <LoadingComponent/>
         </div>
     )
 }

@@ -3,6 +3,7 @@ import { cyberBugsService } from "../../../services/CyberBugsService";
 import { STATUS_CODE } from "../../../util/constants/settingSystem";
 import { GET_ALL_PROJECT_CATEGORY_SAGA } from "../../constants/Cyberbugs/Cyberbugs";
 import {history} from '../../../util/lib/history'
+import { DISPLAY_LOADING, HIDE_LOADING } from "../../constants/LoadingConst";
 
 
 //CREATE PROJECT
@@ -33,11 +34,12 @@ export function* theoDoiCreateProjectSaga() {
 
 //GET APP PROJECTS FROM API
 
-
-
 function* getListProjectSaga(action) {
 
-
+    yield put({
+        type: DISPLAY_LOADING
+    })
+    yield delay(100);
     try {
         //Gọi api lấy dữ liệu về
         const { data, status } = yield call(() => cyberBugsService.getListProjectSaga());
@@ -47,15 +49,56 @@ function* getListProjectSaga(action) {
                 type: 'GET_LIST_PROJECT',
                 projectList: data.content
             })
+
+            yield put({
+                type: 'CLOSE_DRAWER'
+            })
         }
+        yield put({
+            type: HIDE_LOADING
+        })
 
 
     } catch (err) {
         console.log(err);
+        yield put({
+            type: HIDE_LOADING
+        })
     }
 
 }
 
 export function* theoDoiGetListProjectSaga() {
     yield takeLatest('GET_LIST_PROJECT_SAGA', getListProjectSaga);
+}
+
+
+
+// UPDATE PROJECT
+
+function* updateProjectSaga(action) {
+
+    try {
+        //Gọi api lấy dữ liệu về
+        const { data, status } = yield call(() => cyberBugsService.updateProject(action.projectUpdate));
+        //Gọi api thành công thì dispatch lên reducer thông qua put
+        if (status === STATUS_CODE.SUCCESS) {
+           //thanh cong goi lai action saga getList de cap nhat tren UI
+           //1. dung put
+           yield put({
+               type: 'GET_LIST_PROJECT_SAGA'
+           })
+           //2.dung call goi truc tieu function
+        //    yield call(getListProjectSaga);
+        }
+
+    } catch (err) {
+        console.log(err);
+      
+    }
+
+}
+
+export function* theoDoiUpdateProjectSaga() {
+    yield takeLatest('UPDATE_PROJECT_SAGA', updateProjectSaga);
 }

@@ -22,13 +22,15 @@ import { CyberBugsTemplate } from './templates/HomeTemplate/CyberBugsTemplate'
 import indexCyberBugs from './redux/sagas/cyberbugs/indexCyberBugs'
 import CreateProject from './pages/CyberBugs/CreateProject/CreateProject'
 import ProjectManagement from './pages/CyberBugs/ProjectManagement/ProjectManagement'
+import DrawerCyberBugs from './HOC/CyberBugsHOC/DrawerCyberBugs'
 
 
 function App() {
 
   return (
     <>
-      <Modal/>
+      {/* <Modal/> */}
+      <DrawerCyberBugs/>
       <Switch>
 
         {/* <Route exact path='/home' render={(propsRoute) => {

@@ -36,10 +36,10 @@ function CreateProject(props) {
     return (
         <div className="container m-5">
             <h3>CreateProject</h3>
-            <form className="container" onSubmit={handleSubmit} onChange={handleChange}>
+            <form className="container" onSubmit={handleSubmit}>
                 <div className="form-group">
                     <p>Name</p>
-                    <input className="form-control" name="projectName" />
+                    <input className="form-control" name="projectName" onChange={handleChange} />
                 </div>
                 <div className="form-group">
                     <p>Description</p>
@@ -66,7 +66,7 @@ function CreateProject(props) {
                     />
                 </div>
                 <div className="form-group">
-                    <select name="categoryId" className="form-control">
+                    <select name="categoryId" className="form-control" onChange={handleChange}>
                         {arrProjectCategory.map((item,index)=> {
                             return <option value={item.id} key={index}>{item.projectCategoryName}</option>
                         }) }
