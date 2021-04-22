@@ -86,4 +86,26 @@ export function * theoDoiAddUserToProject () {
     yield takeLatest('ADD_USER_PROJECT_API', addUserToProjectSaga);
 }
 
+//--------REMOVE USER TO PROJECT
+
+
+function * removeUserFromProjectSaga(action){
+    try{
+        //call api
+        const {data, status} =  yield call(() => userService.deleteUserFromProject(action.userProject));
+        
+        yield put({
+            type: 'GET_LIST_PROJECT_SAGA'
+        })
+
+    }catch(err){
+        console.log(err.response.data);
+    }
+}
+
+
+export function * theoDoiRemoveUserFromProject () {
+    yield takeLatest('REMOVE_USER_PROJECT_API', removeUserFromProjectSaga);
+}
+
 

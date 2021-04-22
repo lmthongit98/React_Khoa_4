@@ -7,7 +7,6 @@ export class ProjectService extends baseService {
        return this.delete(`/Project/deleteProject?projectId=${id}`);
     }
 
-
 }
 
 

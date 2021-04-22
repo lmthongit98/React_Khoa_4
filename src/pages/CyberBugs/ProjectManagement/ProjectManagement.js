@@ -112,7 +112,42 @@ export default function ProjectManagement(props) {
                 return <div>
                     {
                         record.members?.slice(0, 3).map((member, index) => {
-                            return <Avatar key={index} src={member.avatar} />
+
+                            return <Popover key={index} placement="top" title={"Member"} content={() => {
+                                return <table className="table">
+                                    <thead>
+                                       <tr>
+                                       <th>Id</th>
+                                        <th>Avatar</th>
+                                        <th>Name</th>
+                                        <th></th>
+                                       </tr>
+                                    </thead>
+                                    <tbody>
+                                        {record.members?.map((item, index) => {
+                                            return <tr key={index}>
+                                                <td>{item.userId}</td>
+                                                <td><img src={item.avatar} style={{ borderRadius: '15px' }} width="30" height="30" alt="avt" /></td>
+                                                <td>{item.name}</td>
+                                                <td>
+                                                    <button onClick= {() => {
+                                                        console.log("ahihi")
+                                                        dispatch({
+                                                            type: 'REMOVE_USER_PROJECT_API',
+                                                            userProject: {userId: item.userId, projectId: record.id}
+                                                        })
+                                                    }} className="btn btn-danger">
+                                                        <DeleteOutlined style={{ fontSize: 17 }} />
+                                                    </button>
+                                                </td>
+
+                                            </tr>
+                                        })}
+                                    </tbody>
+                                </table>
+                            }}>
+                                <Avatar key={index} src={member.avatar} />
+                            </Popover>
                         })
 
                     }
