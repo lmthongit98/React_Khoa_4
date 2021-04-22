@@ -14,10 +14,14 @@ export function* rootSaga() {
         ToDoListSaga.theoDoiActionRejectTaskApi(),
         //Cyberbugs
         CyberBugs.theoDoiSignIn(),
+        CyberBugs.theoDoiGetUser(),
+        CyberBugs.theoDoiAddUserToProject(),
         ProjectCategorySaga.theoDoigetAllProjectCategory(),
         ProjectSaga.theoDoiCreateProjectSaga(),
         ProjectSaga.theoDoiGetListProjectSaga(),
         ProjectSaga.theoDoiUpdateProjectSaga(),
+        ProjectSaga.theoDoiDeleteProject(),
+        
 
    ])
 }

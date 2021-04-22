@@ -2,9 +2,6 @@ import axios from 'axios'
 import {DOMAIN_CYBERBUG, TOKEN} from '../util/constants/settingSystem'
 
 export class CyberBugsService{
-    constructor(){ 
-
-    }
 
     signinCyberBugs = (userLogin) => {
         return axios({

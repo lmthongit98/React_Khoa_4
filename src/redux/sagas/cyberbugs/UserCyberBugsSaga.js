@@ -3,9 +3,10 @@ import { cyberBugsService } from '../../../services/CyberBugsService';
 import { TOKEN, USER_LOGIN } from '../../../util/constants/settingSystem';
 import { USER_SIGNIN_API, USLOGIN } from '../../constants/Cyberbugs/Cyberbugs';
 import {history} from '../../../util/lib/history'
+import { userService } from '../../../services/UserService';
 
 
-//Quan ly cac action saga
+//--------SINGIN
 
 function * signinSaga(action){
     try{
@@ -35,3 +36,54 @@ function * signinSaga(action){
 export function * theoDoiSignIn(){
     yield takeLatest(USER_SIGNIN_API, signinSaga);
 }
+
+//--------GET USER SEATCH AUTOCOMPLETE
+
+function * getUserSaga(action){
+    try{
+        //call api
+        const {data, status} =  yield call(() => userService.getUser(action.keyWord));
+        
+        console.log(data);
+
+        yield put({
+            type: 'GET_USER_SEARCH',
+            lstUserSearch: data.content
+        })
+
+      
+       
+
+    }catch(err){
+        console.log(err);
+    }
+}
+
+
+export function * theoDoiGetUser () {
+    yield takeLatest('GET_USER_API', getUserSaga);
+}
+
+//--------ADD/ASSIGN USER TO PROJECT
+
+
+function * addUserToProjectSaga(action){
+    try{
+        //call api
+        const {data, status} =  yield call(() => userService.assignUserProject(action.userProject));
+        
+        yield put({
+            type: 'GET_LIST_PROJECT_SAGA'
+        })
+
+    }catch(err){
+        console.log(err.response.data);
+    }
+}
+
+
+export function * theoDoiAddUserToProject () {
+    yield takeLatest('ADD_USER_PROJECT_API', addUserToProjectSaga);
+}
+
+

@@ -1,15 +1,20 @@
 import React, { useEffect, useState } from 'react'
-import { Table, Tag, Space, Button } from 'antd';
+import { Table, Tag, Space, Button, Avatar, Popover, AutoComplete } from 'antd';
 import ReactHtmlParser from "react-html-parser";
 import { FormOutlined, DeleteOutlined } from '@ant-design/icons'
 import { useSelector, useDispatch } from 'react-redux'
 import FormEditProject from '../../../components/Forms/FromEditProject';
 import LoadingComponent from '../../../components/GlobalSetting/LoadingComponent/LoadingComponent';
+import { Popconfirm, message } from 'antd';
 
 
 export default function ProjectManagement(props) {
 
     const projectList = useSelector(state => state.ProjectCyberBugsReducer.projectList);
+
+    const userSearch = useSelector(state => state.UserCyberBugsReducer.userSearch);
+
+    const [value, setValue] = useState('');
 
     const dispatch = useDispatch();
 
@@ -101,6 +106,61 @@ export default function ProjectManagement(props) {
             }
         },
         {
+            title: 'member',
+            key: 'member',
+            render: (text, record, index) => {
+                return <div>
+                    {
+                        record.members?.slice(0, 3).map((member, index) => {
+                            return <Avatar key={index} src={member.avatar} />
+                        })
+
+                    }
+                    {record.members.length > 3 ? <Avatar>...</Avatar> : ''}
+                    <Popover placement="topLeft" title={"Add user"} content={() => {
+                        return <AutoComplete
+                            options={userSearch?.map((user, index) => {
+                                return { label: user.name, value: user.userId.toString() }
+                            })}
+
+                            value={value}
+
+                            onChange={text => {
+                                //set value cua autoComplete khi nguoi dung nhap du lieu
+                                setValue(text);
+                            }}
+
+                            onSelect={(selectedValue, option) => {
+
+                                //set value cua autoComplete = option.lable
+                                setValue(option.label);
+
+                                //Goi api gui ve backend
+                                dispatch({
+                                    type: 'ADD_USER_PROJECT_API',
+                                    userProject: {
+                                        "projectId": record.id,
+                                        "userId": selectedValue
+                                    }
+                                })
+
+                                // console.log('userId', value)
+                                // console.log('option', option)
+                            }}
+                            style={{ width: '100%' }} onSearch={(keyWord) => {
+                                // console.log(keyWord)
+                                dispatch({
+                                    type: 'GET_USER_API',
+                                    keyWord
+                                })
+                            }} />
+                    }} >
+                        <Button>+</Button>
+                    </Popover>
+                </div>
+            },
+        },
+        {
             title: 'Action',
             dataIndex: '',
             key: 'x',
@@ -120,9 +180,24 @@ export default function ProjectManagement(props) {
                     }} className="btn mr-2 btn-primary">
                         <FormOutlined style={{ fontSize: 17 }} />
                     </button>
-                    <button className="btn btn-danger">
-                        <DeleteOutlined style={{ fontSize: 17 }} />
-                    </button>
+                    <Popconfirm
+                        title="Are you sure to delete this project?"
+                        onConfirm={(e) => {
+                            dispatch({
+                                type: 'DELETE_PROJECT_SAGA',
+                                projectId: record.id
+                            })
+                        }}
+                        okText="Yes"
+                        cancelText="No"
+
+                    >
+                        <button className="btn btn-danger">
+                            <DeleteOutlined style={{ fontSize: 17 }} />
+                        </button>
+                    </Popconfirm>
+
+
                 </div>
             },
         }
@@ -137,7 +212,7 @@ export default function ProjectManagement(props) {
                 <Button onClick={clearAll}>Clear filters and sorters</Button>
             </Space>
             <Table columns={columns} rowKey={"id"} dataSource={projectList} onChange={handleChange} />
-            <LoadingComponent/>
+            <LoadingComponent />
         </div>
     )
 }

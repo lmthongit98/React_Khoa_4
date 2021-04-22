@@ -12,7 +12,8 @@ if(localStorage.getItem(USER_LOGIN)){
 
 
 const stateDefault = {
-    userLogin: _userLogin
+    userLogin: _userLogin,
+    userSearch: []
 }  
 
 const reducer = (state = stateDefault, action) => {
@@ -21,6 +22,11 @@ const reducer = (state = stateDefault, action) => {
         case USLOGIN: {
             state.userLogin = action.userLogin;
             console.log(state);
+            return {...state};
+        }
+        case 'GET_USER_SEARCH': {
+            state.userSearch = action.lstUserSearch;
+            console.log('state', state)
             return {...state};
         }
         default:
