@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Table, Tag, Space, Button, Avatar, Popover, AutoComplete } from 'antd';
 import ReactHtmlParser from "react-html-parser";
 import { FormOutlined, DeleteOutlined } from '@ant-design/icons'
@@ -17,6 +17,8 @@ export default function ProjectManagement(props) {
     const [value, setValue] = useState('');
 
     const dispatch = useDispatch();
+
+    const searchRef = useRef(null)
 
     useEffect(() => {
         dispatch({
@@ -182,12 +184,23 @@ export default function ProjectManagement(props) {
                                 // console.log('userId', value)
                                 // console.log('option', option)
                             }}
-                            style={{ width: '100%' }} onSearch={(keyWord) => {
-                                // console.log(keyWord)
-                                dispatch({
-                                    type: 'GET_USER_API',
-                                    keyWord
-                                })
+                            style={{ width: '100%' }} 
+                            
+
+                            onSearch={(keyWord) => {
+
+                                //debounce search
+                                if(searchRef.current){
+                                    clearTimeout(searchRef.current); // reset cho den khi nguoi dung doi 3s
+                                }
+                            
+                                searchRef.current = setTimeout(() => {
+                                    dispatch({
+                                        type: 'GET_USER_API',
+                                        keyWord
+                                    })
+                                }, 300)//  300ms moi dispatch nhe
+
                             }} />
                     }} >
                         <Button>+</Button>
