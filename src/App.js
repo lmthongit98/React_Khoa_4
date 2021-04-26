@@ -19,7 +19,7 @@ import { HomeTemplate } from './templates/HomeTemplate/HomeTeamplate'
 import { UserLoginTemplate } from './templates/HomeTemplate/UserLoginTemplate'
 import React from 'react'
 import { CyberBugsTemplate } from './templates/HomeTemplate/CyberBugsTemplate'
-import indexCyberBugs from './redux/sagas/cyberbugs/indexCyberBugs'
+import IndexCyberBugs from './redux/sagas/cyberbugs/IndexCyberBugs'
 import CreateProject from './pages/CyberBugs/CreateProject/CreateProject'
 import ProjectManagement from './pages/CyberBugs/ProjectManagement/ProjectManagement'
 import DrawerCyberBugs from './HOC/CyberBugsHOC/DrawerCyberBugs'
@@ -52,10 +52,11 @@ function App() {
         <HomeTemplate exact path='/todolistredux' Component={ToDoListRedux} />
         <HomeTemplate exact path='/todolistsaga' Component={BaiTapToDoListSaga} />
         <HomeTemplate exact path='/demohocmodal' Component={DemoHOCModal} />
-        <CyberBugsTemplate exact path='/cyberbugs' Component={indexCyberBugs}/>
+        <CyberBugsTemplate exact path='/cyberbugs' Component={IndexCyberBugs}/>
         <CyberBugsTemplate exact path='/createproject' Component={CreateProject} />
         <CyberBugsTemplate exact path='/projectmanagement' Component={ProjectManagement} />
-        <HomeTemplate exact path='/' Component={Home} />
+        <CyberBugsTemplate exact path='/projectdetail/:projectId' Component={IndexCyberBugs} />
+        <CyberBugsTemplate exact path='/' Component={ProjectManagement} />
         <HomeTemplate exact path='*' component={PageNotFound} />
       </Switch>
     </>

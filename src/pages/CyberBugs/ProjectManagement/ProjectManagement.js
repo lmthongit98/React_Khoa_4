@@ -6,6 +6,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import FormEditProject from '../../../components/Forms/FromEditProject';
 import LoadingComponent from '../../../components/GlobalSetting/LoadingComponent/LoadingComponent';
 import { Popconfirm, message } from 'antd';
+import { NavLink } from 'react-router-dom';
 
 
 export default function ProjectManagement(props) {
@@ -75,6 +76,9 @@ export default function ProjectManagement(props) {
             title: 'projectName',
             dataIndex: 'projectName',
             key: 'projectName',
+            render: (text, record, index) => {
+               return <NavLink to={"/projectdetail/"+record.id}>{text}</NavLink>
+            },
             sorter: (nextItem, item) => {
                 if (nextItem.projectName?.trim().toLowerCase() < item.projectName?.trim().toLowerCase()) {
                     return -1;

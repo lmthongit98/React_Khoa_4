@@ -141,3 +141,27 @@ function* deleteProjectSaga(action) {
 export function* theoDoiDeleteProject() {
     yield takeLatest('DELETE_PROJECT_SAGA', deleteProjectSaga);
 }
+
+
+//GET PROJECT  DETAIL
+
+
+function* getProjectDetailSaga(action) {
+
+    try {
+        //Gọi api lấy dữ liệu về
+        const { data, status } = yield call(() => projectService.getProjectDetail(action.projectId));
+        yield put({
+            type: 'PUT_PROJECT_DETAIL',
+            projectDetail: data.content
+        })
+
+    } catch (err) {
+        console.log(err);
+    }
+
+}
+
+export function* theoDoiGetProjectDetail() {
+    yield takeLatest('GET_PROJECT_DETAIL', getProjectDetailSaga);
+}
