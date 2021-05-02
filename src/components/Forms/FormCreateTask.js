@@ -17,6 +17,13 @@ export default function FormCreateTask(props) {
     const {arrProject} = useSelector(state => state.ProjectCyberBugsReducer);
     const {arrTaskType} = useSelector(state => state.TaskTypeReducer);  
     const {arrPriority} = useSelector(state => state.PriorityReducer);
+    const {userSearch} = useSelector(state => state.UserCyberBugsReducer)
+
+    //Bien doi options cho the select
+    const userOption = userSearch.map((item, index) => {
+        return {value: item.userId, label: item.name};
+        // return <Option key={item.userId}>{item.name}</Option>;
+    })
 
     const { Option } = Select;
 
@@ -40,8 +47,17 @@ export default function FormCreateTask(props) {
         });
         dispatch({
             type: GET_ALL_PRIORITY_SAGA
+        });
+        dispatch({
+            type: 'GET_USER_API',
+            keyWord: ''
         })
     }, [])
+
+    //OnChange Select Assignee
+    const handleChangeAsignee = (value) => {
+        console.log(`Selected: ${value}`);
+    }
 
     const {
         values,
@@ -107,10 +123,14 @@ export default function FormCreateTask(props) {
                     <div className="col-6">
                         <p>Assignees</p>
                         <Select
-                            mode="tags"
+                            mode="multiple"
                             placeholder="Please select"
-                            defaultValue={['a10', 'c12']}
-                            // onChange={handleChange}
+                            options={userOption}
+                            onChange={handleChangeAsignee}
+                            onSelect={(value) => {
+                                console.log(value)
+                            }}
+                            optionFilterProp="label"
                             style={{ width: '100%' }}
                         >
                             {children}
