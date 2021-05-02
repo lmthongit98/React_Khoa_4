@@ -7,6 +7,8 @@ import ProjectCategoryReducer from './reducers/ProjectCategoryReducer'
 import ProjectCyberBugsReducer from './reducers/ProjectCyberBugsReducer'
 import drawerReducer from './reducers/DrawerCyberbugsReducer'
 import ProjectReducer from './reducers/ProjectReducer'
+import TaskTypeReducer from './reducers/TaskTypeReducer'
+import PriorityReducer from './reducers/PriorityReducer'
 import reduxThunk from 'redux-thunk'
 
 //middleWare saga
@@ -26,6 +28,8 @@ const rootReducer = combineReducers({
     ProjectCyberBugsReducer,
     drawerReducer,
     ProjectReducer,
+    TaskTypeReducer,
+    PriorityReducer
 
 })
 

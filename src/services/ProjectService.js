@@ -2,9 +2,13 @@ import { baseService } from "./baseService";
 
 export class ProjectService extends baseService {
 
+    getAllProject = () => {
+        return this.get(`Project/getAllProject`);
+    }
+
     deleteProject = (id) => {
         
-       return this.delete(`/Project/deleteProject?projectId=${id}`);
+       return this.delete(`Project/deleteProject?projectId=${id}`);
     }
 
     getProjectDetail = (projectId) => {

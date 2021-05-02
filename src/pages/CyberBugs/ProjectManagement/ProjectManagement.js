@@ -222,6 +222,7 @@ export default function ProjectManagement(props) {
                         //dispatch mo drawer va truyen component
                         dispatch({
                             type: 'OPEN_FORM_EDIT_PROJECT',
+                            title: 'Edit Project',
                             Component: <FormEditProject />,
                         })
                         //dispatch goi api lay du lieu dong hien tai

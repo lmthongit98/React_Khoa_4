@@ -6,6 +6,8 @@ import {history} from '../../../util/lib/history'
 import { DISPLAY_LOADING, HIDE_LOADING } from "../../constants/LoadingConst";
 import { projectService } from "../../../services/ProjectService";
 import { notifiFunction } from "../../../util/Notification/NotificationCyberbugs";
+import { GET_ALL_PROJECT, GET_ALL_PROJECT_SAGA } from "../../constants/Cyberbugs/ProjectCyberBugsContants";
+
 
 
 
@@ -35,7 +37,7 @@ export function* theoDoiCreateProjectSaga() {
 }
 
 
-//GET APP PROJECTS FROM API
+//GET LIST PROJECTS FROM API
 
 function* getListProjectSaga(action) {
 
@@ -164,4 +166,27 @@ function* getProjectDetailSaga(action) {
 
 export function* theoDoiGetProjectDetail() {
     yield takeLatest('GET_PROJECT_DETAIL', getProjectDetailSaga);
+}
+
+
+//GET ALL PROJECT (FOR CREATE TASK)
+
+function* getAllProjectSaga(action) {
+
+    try {
+        //Gọi api lấy dữ liệu về
+        const { data, status } = yield call(() => projectService.getAllProject());
+        yield put({
+            type: GET_ALL_PROJECT,
+            arrProject: data.content
+        })
+
+    } catch (err) {
+        console.log(err);
+    }
+
+}
+
+export function* theoDoiGetAllProject() {
+    yield takeLatest(GET_ALL_PROJECT_SAGA, getAllProjectSaga);
 }

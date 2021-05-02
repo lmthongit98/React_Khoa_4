@@ -1,6 +1,7 @@
 import React from 'react'
 const initialState = {
     visible: false,
+    title: '',
     ComponentContentDrawer: <p>default</p>,
     callBackSubmit: (propsValue) => { alert('click demo!') }
 }
@@ -13,14 +14,21 @@ const reducer = (state = initialState, action) => {
         case 'CLOSE_DRAWER':
             return { ...state, visible: false }
         case 'OPEN_FORM_EDIT_PROJECT': {
+            debugger
             state.visible = true;
             state.ComponentContentDrawer = action.Component;
-
+            state.title = action.title;
             return { ...state }
 
         }
         case 'SET_SUBMIT_EDIT_PROJECT': {
             state.callBackSubmit = action.submitFunction;
+            return {...state};
+        }
+        case 'OPEN_FORM_CREATE_TASK': {
+            state.visible = true;
+            state.title = action.title;
+            state.ComponentContentDrawer = action.Component;
             return {...state};
         }
 

@@ -76,7 +76,7 @@ function FormEditProject(props) {
                         <p className="font-weight-bold">Description</p>
                         <Editor
 
-                            name="description123"
+                            name="description"
                             initialValue={values.description}
                             init={{
                                 selector: 'textarea#myTextArea',
