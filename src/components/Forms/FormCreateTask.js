@@ -10,7 +10,7 @@ import { GET_ALL_PROJECT_SAGA } from '../../redux/constants/Cyberbugs/ProjectCyb
 import { GET_ALL_TASK_TYPE_SAGA } from '../../redux/constants/Cyberbugs/TaskTypeConstants';
 import { GET_ALL_PRIORITY_SAGA } from '../../redux/constants/Cyberbugs/PriorityConstants';
 
-export default function FormCreateTask(props) {
+function FormCreateTask(props) {
     const dispatch = useDispatch();
 
     //Lay du lieu tu redux
@@ -54,11 +54,9 @@ export default function FormCreateTask(props) {
         })
     }, [])
 
-    //OnChange Select Assignee
-    const handleChangeAsignee = (value) => {
-        console.log(`Selected: ${value}`);
-    }
 
+
+    //Cac thuoc tinh khi duoc ket noi voi formik
     const {
         values,
         touched,
@@ -67,18 +65,15 @@ export default function FormCreateTask(props) {
         handleBlur,
         handleSubmit,
         setFieldValue,
-
+        isSubmitting
     } = props;
 
-    const handleEditorChange = (content, editor) => {
-        setFieldValue('description', content)
-    }
 
     return (
-        <div className="container">
+        <form className="container" onSubmit={handleSubmit}>
             <div className="form-group">
                 <p>Project</p>
-                <select name="projectId" className="form-control">
+                <select name="projectId" className="form-control" onChange={handleChange}>
                     {
                         arrProject.map((item, index) => {
                             return (
@@ -89,10 +84,14 @@ export default function FormCreateTask(props) {
                 </select>
             </div>
             <div className="form-group">
+                <p>Task name</p>
+                <input name="taskName" className="form-control" onChange={handleChange}/>
+            </div>
+            <div className="form-group">
                 <div className="row">
                     <div className="col-6">
                         <p>Priority</p>
-                        <select name="priorityId" className="form-control">
+                        <select name="priorityId" className="form-control" onChange={handleChange}>
                             {
                                 arrPriority.map((item, index) => {
                                     return (
@@ -106,7 +105,7 @@ export default function FormCreateTask(props) {
                     </div>
                     <div className="col-6">
                         <p>Task type</p>
-                        <select className="form-control" name="typeId">                      
+                        <select className="form-control" name="typeId" onChange={handleChange}>                      
                             {
                                 arrTaskType.map((item, index) => {
                                     return (
@@ -126,9 +125,11 @@ export default function FormCreateTask(props) {
                             mode="multiple"
                             placeholder="Please select"
                             options={userOption}
-                            onChange={handleChangeAsignee}
+                            onChange={(values) => {
+                                setFieldValue('listUserAsign', values)
+                            }}
                             onSelect={(value) => {
-                                console.log(value)
+                                // console.log(value)
                             }}
                             optionFilterProp="label"
                             style={{ width: '100%' }}
@@ -138,7 +139,7 @@ export default function FormCreateTask(props) {
                         <div className="row">
                             <div className="col-12">
                                 <p>Original Estimate</p>
-                                <input type="number" min="0" name="originalEstimate" defaultValue="0" className="form-control" height="30" />
+                                <input onChange={handleChange} type="number" min="0" name="originalEstimate" defaultValue="0" className="form-control" height="30" />
                             </div>
                         </div>
                     </div>
@@ -160,7 +161,8 @@ export default function FormCreateTask(props) {
                                     setTimeTracking({
                                         ...timeTracking,
                                         timeTrackingSpent: e.target.value
-                                    })
+                                    });
+                                    setFieldValue('timeTrackingSpent', e.target.value);
                                 }} />
                             </div>
                             <div className="col-6">
@@ -169,7 +171,8 @@ export default function FormCreateTask(props) {
                                     setTimeTracking({
                                         ...timeTracking,
                                         timeTrackingRemaining: e.target.value
-                                    })
+                                    });
+                                    setFieldValue('timeTrackingRemaining', e.target.value);
                                 }} />
                             </div>
                         </div>
@@ -197,9 +200,46 @@ export default function FormCreateTask(props) {
                             alignleft aligncenter alignright alignjustify | \
                             bullist numlist outdent indent | removeformat | help'
                     }}
-                    onEditorChange={handleEditorChange}
+                    onEditorChange={(content, editor) => {
+                        setFieldValue('description', content);
+                    }}
                 />
             </div>
-        </div>
+            <button type="submit"  disabled={isSubmitting}>submit</button>
+        </form>
     )
 }
+
+const CreateTaskForm = withFormik({
+    // enableReinitialize: true, //ham se chay lai khi props cua redux change
+    mapPropsToValues: (props) => {
+        return {
+            //Khoi tao cac gia tri ban dau
+            listUserAsign: [],
+            taskName: "",
+            description: "",
+            statusId: 1,
+            originalEstimate: 0,
+            timeTrackingSpent: 0,
+            timeTrackingRemaining: 0,
+            projectId: 0,
+            typeId: 0,
+            priorityId: 0
+        }
+    },
+    validationSchema: Yup.object().shape({
+
+
+    }),
+    handleSubmit: (values, { props, setSubmitting }) => {
+        //dispatch to saga
+        props.dispatch({
+            type: 'CREATE_TASK_SAGA',
+            taskObject: values
+        })
+    },
+    displayName: 'CreateTaskForm',
+})(FormCreateTask);
+
+
+export default connect(null)(CreateTaskForm);
