@@ -1,7 +1,8 @@
 import { call, fork, put, take, takeLatest, delay, select } from 'redux-saga/effects'
 import { cyberBugsService } from '../../../services/CyberBugsService';
-import { TOKEN, USER_LOGIN } from '../../../util/constants/settingSystem';
+import { STATUS_CODE, TOKEN, USER_LOGIN } from '../../../util/constants/settingSystem';
 import { USER_SIGNIN_API, USLOGIN } from '../../constants/Cyberbugs/Cyberbugs';
+import {GET_USER_BY_PROJECT_ID, GET_USER_BY_PROJECT_ID_SAGA} from '../../constants/Cyberbugs/UserConstant'
 import {history} from '../../../util/lib/history'
 import { userService } from '../../../services/UserService';
 
@@ -109,3 +110,30 @@ export function * theoDoiRemoveUserFromProject () {
 }
 
 
+//--------GET USER BY PROJECT ID
+
+function * getUserByProjectIdSaga(action){
+    try{
+        //call api
+        const {data, status} =  yield call(() => userService.getUserByProjectId(action.idProject));
+        if(status === STATUS_CODE.SUCCESS){
+            console.log(data.content);
+            yield put({
+                type: GET_USER_BY_PROJECT_ID,
+                arrUser: data.content
+            })
+        }
+
+    }catch(err){
+        console.log(err);
+        console.log(err.response?.data);
+        if(err.response?.data.statusCode  === STATUS_CODE.NOT_FOUND){
+           //hanlde when not user ...
+        }
+    }
+}
+
+
+export function * theoDoiGetUserByProjectIdSaga() {
+    yield takeLatest(GET_USER_BY_PROJECT_ID_SAGA, getUserByProjectIdSaga);
+}

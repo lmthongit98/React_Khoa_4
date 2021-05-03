@@ -2,11 +2,12 @@ import { call, delay, put, takeLatest } from "redux-saga/effects";
 import { cyberBugsService } from "../../../services/CyberBugsService";
 import { STATUS_CODE } from "../../../util/constants/settingSystem";
 import { GET_ALL_PROJECT_CATEGORY_SAGA } from "../../constants/Cyberbugs/Cyberbugs";
-import {history} from '../../../util/lib/history'
+import { history } from '../../../util/lib/history'
 import { DISPLAY_LOADING, HIDE_LOADING } from "../../constants/LoadingConst";
 import { projectService } from "../../../services/ProjectService";
 import { notifiFunction } from "../../../util/Notification/NotificationCyberbugs";
 import { GET_ALL_PROJECT, GET_ALL_PROJECT_SAGA } from "../../constants/Cyberbugs/ProjectCyberBugsContants";
+import { GET_USER_BY_PROJECT_ID_SAGA } from "../../constants/Cyberbugs/UserConstant";
 
 
 
@@ -88,18 +89,18 @@ function* updateProjectSaga(action) {
         const { data, status } = yield call(() => cyberBugsService.updateProject(action.projectUpdate));
         //Gọi api thành công thì dispatch lên reducer thông qua put
         if (status === STATUS_CODE.SUCCESS) {
-           //thanh cong goi lai action saga getList de cap nhat tren UI
-           //1. dung put
-           yield put({
-               type: 'GET_LIST_PROJECT_SAGA'
-           })
-           //2.dung call goi truc tieu function
-        //    yield call(getListProjectSaga);
+            //thanh cong goi lai action saga getList de cap nhat tren UI
+            //1. dung put
+            yield put({
+                type: 'GET_LIST_PROJECT_SAGA'
+            })
+            //2.dung call goi truc tieu function
+            //    yield call(getListProjectSaga);
         }
 
     } catch (err) {
         console.log(err);
-      
+
     }
 
 }
@@ -122,14 +123,14 @@ function* deleteProjectSaga(action) {
         //Gọi api thành công thì dispatch lên reducer thông qua put
         if (status === STATUS_CODE.SUCCESS) {
             notifiFunction('success', 'Delete  project sucessfully !');
-           //thanh cong goi lai action saga getList de cap nhat tren UI
-           //1. dung put
-           yield put({
-               type: 'GET_LIST_PROJECT_SAGA'
-           })
-           //2.dung call goi truc tieu function
-        //    yield call(getListProjectSaga);
-        }else{
+            //thanh cong goi lai action saga getList de cap nhat tren UI
+            //1. dung put
+            yield put({
+                type: 'GET_LIST_PROJECT_SAGA'
+            })
+            //2.dung call goi truc tieu function
+            //    yield call(getListProjectSaga);
+        } else {
             notifiFunction('error', 'Delete  project fail !');
         }
 
@@ -180,6 +181,14 @@ function* getAllProjectSaga(action) {
             type: GET_ALL_PROJECT,
             arrProject: data.content
         })
+
+        //handle for asignnee select
+        if (data.content.length > 0) {
+            yield put({
+                type: GET_USER_BY_PROJECT_ID_SAGA,
+                idProject: data.content[0].id
+            })
+        }
 
     } catch (err) {
         console.log(err);

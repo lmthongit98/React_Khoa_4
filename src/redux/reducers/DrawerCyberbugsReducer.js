@@ -14,7 +14,6 @@ const reducer = (state = initialState, action) => {
         case 'CLOSE_DRAWER':
             return { ...state, visible: false }
         case 'OPEN_FORM_EDIT_PROJECT': {
-            debugger
             state.visible = true;
             state.ComponentContentDrawer = action.Component;
             state.title = action.title;
@@ -29,6 +28,10 @@ const reducer = (state = initialState, action) => {
             state.visible = true;
             state.title = action.title;
             state.ComponentContentDrawer = action.Component;
+            return {...state};
+        }
+        case 'SET_SUBMIT_CREATE_TASK': {
+            state.callBackSubmit = action.submitFunction;
             return {...state};
         }
 

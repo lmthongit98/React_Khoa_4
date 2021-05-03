@@ -9,6 +9,7 @@ import drawerReducer from './reducers/DrawerCyberbugsReducer'
 import ProjectReducer from './reducers/ProjectReducer'
 import TaskTypeReducer from './reducers/TaskTypeReducer'
 import PriorityReducer from './reducers/PriorityReducer'
+import StatusReducer from './reducers/StatusReducer'
 import reduxThunk from 'redux-thunk'
 
 //middleWare saga
@@ -29,7 +30,8 @@ const rootReducer = combineReducers({
     drawerReducer,
     ProjectReducer,
     TaskTypeReducer,
-    PriorityReducer
+    PriorityReducer,
+    StatusReducer,
 
 })
 
