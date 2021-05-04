@@ -1,9 +1,12 @@
 import React from 'react'
 import ReactHtmlParser from "react-html-parser";
+import {useDispatch} from 'react-redux'
+import { GET_TASK_DETAIL_SAGA } from '../../../redux/constants/Cyberbugs/TaskConstant';
 
 export default function ContentMain(props) {
 
     const { projectDetail } = props;
+    const dispatch = useDispatch();
 
     const renderCardTaskList = () => {
         return projectDetail.lstTask?.map((taskListDetail, index) => {
@@ -15,7 +18,13 @@ export default function ContentMain(props) {
                     {
                         taskListDetail.lstTaskDeTail.map((task, index) => {
                             return (
-                                <li key={index} className="list-group-item" data-toggle="modal" data-target="#infoModal" style={{ cursor: 'pointer' }}>
+                                <li onClick = {() => {
+                                    dispatch({
+                                       
+                                        type: GET_TASK_DETAIL_SAGA,
+                                        taskId: task.taskId
+                                    })
+                                }} key={index} className="list-group-item" data-toggle="modal" data-target="#infoModal" style={{ cursor: 'pointer' }}>
                                     <p className="font-weight-bold">
                                         {task.taskName}
                                     </p>
