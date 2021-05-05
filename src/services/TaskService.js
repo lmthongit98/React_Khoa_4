@@ -10,6 +10,10 @@ export class TaskService extends baseService {
         return this.get(`Project/getTaskDetail?taskId=${taskId}`);
     }
 
+    updateStatusTask(taskStatusUpdate){
+        return this.put(`Project/updateStatus`, taskStatusUpdate);
+    }
+
 }
 
 

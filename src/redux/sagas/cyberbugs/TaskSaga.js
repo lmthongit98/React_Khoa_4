@@ -2,7 +2,7 @@ import { taskService } from "../../../services/TaskService";
 import { call, put, takeLatest } from "@redux-saga/core/effects";
 import { STATUS_CODE } from "../../../util/constants/settingSystem";
 import {notifiFunction} from '../../../util/Notification/NotificationCyberbugs'
-import { GET_TASK_DETAIL, GET_TASK_DETAIL_SAGA } from "../../constants/Cyberbugs/TaskConstant";
+import { GET_TASK_DETAIL, GET_TASK_DETAIL_SAGA, UPDATE_STATUS_TASK_SAGA } from "../../constants/Cyberbugs/TaskConstant";
 
 
 //Create Task
@@ -46,4 +46,31 @@ function * getTaskDetailSaga(action){
 
 export function * theoDoiGetTaskDetailSaga(){
     yield takeLatest(GET_TASK_DETAIL_SAGA, getTaskDetailSaga);
+}
+
+//Update Task
+function * updateTaskStatusSaga(action){
+    try{
+        const {data, status} = yield call(() => taskService.updateStatusTask(action.taskUpdateStatus));
+        if(status === STATUS_CODE.SUCCESS){
+            yield put({
+                type: 'GET_PROJECT_DETAIL',
+                projectId: action.taskUpdateStatus.projectId
+            })
+            yield put({
+                type: GET_TASK_DETAIL_SAGA,
+                taskId: action.taskUpdateStatus.taskId
+            })
+        }else{
+            console.log('error');
+        }
+
+    }catch(err){
+        console.log(err);
+        console.log(err.response?.data);
+    }
+}
+
+export function * theoDoiupdateTaskStatusSaga(){
+    yield takeLatest(UPDATE_STATUS_TASK_SAGA, updateTaskStatusSaga);
 }

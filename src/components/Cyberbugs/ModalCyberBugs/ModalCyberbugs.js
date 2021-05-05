@@ -3,6 +3,7 @@ import HtmlParser from 'react-html-parser';
 import { useSelector, useDispatch } from 'react-redux';
 import { GET_ALL_STATUS_SAGA } from '../../../redux/constants/Cyberbugs/StatusConstant';
 import { GET_ALL_PRIORITY_SAGA } from '../../../redux/constants/Cyberbugs/PriorityConstants';
+import { UPDATE_STATUS_TASK_SAGA } from '../../../redux/constants/Cyberbugs/TaskConstant';
 
 
 export default function ModalCyberBugs(props) {
@@ -121,7 +122,17 @@ export default function ModalCyberBugs(props) {
                                 <div className="col-4">
                                     <div className="status">
                                         <h6>STATUS</h6>
-                                        <select onChange={() => {}} className="custom-select" value={taskDetailModal.statusId}>
+                                        <select onChange={(e) => {
+                                            const action = {
+                                                type: UPDATE_STATUS_TASK_SAGA,
+                                                taskUpdateStatus: {
+                                                    taskId: taskDetailModal.taskId,
+                                                    statusId: e.target.value,
+                                                    projectId: taskDetailModal.projectId
+                                                }
+                                            }
+                                            dispatch(action);
+                                        }} className="custom-select" value={taskDetailModal.statusId}>
                                             {
                                                 arrStatus.map((item, index) => {
                                                     return (
@@ -172,7 +183,7 @@ export default function ModalCyberBugs(props) {
                                             {
                                                 arrPriority.map((item, index) => {
                                                     return(
-                                                        <option value={item.priorityId}>
+                                                        <option key={index} value={item.priorityId}>
                                                             {item.priority}
                                                         </option>
                                                     )
