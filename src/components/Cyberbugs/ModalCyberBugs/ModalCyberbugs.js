@@ -1,9 +1,12 @@
-import React, { useEffect } from 'react';
+/* eslint-disable no-multi-str */
+import React, { useEffect, useState } from 'react';
 import HtmlParser from 'react-html-parser';
 import { useSelector, useDispatch } from 'react-redux';
 import { GET_ALL_STATUS_SAGA } from '../../../redux/constants/Cyberbugs/StatusConstant';
 import { GET_ALL_PRIORITY_SAGA } from '../../../redux/constants/Cyberbugs/PriorityConstants';
-import { UPDATE_STATUS_TASK_SAGA } from '../../../redux/constants/Cyberbugs/TaskConstant';
+import { CHANGE_TASK_MODAL } from '../../../redux/constants/Cyberbugs/TaskConstant';
+import { GET_ALL_TASK_TYPE_SAGA} from '../../../redux/constants/Cyberbugs/TaskTypeConstants'
+import { Editor } from '@tinymce/tinymce-react'
 
 
 export default function ModalCyberBugs(props) {
@@ -11,36 +14,117 @@ export default function ModalCyberBugs(props) {
     const { taskDetailModal } = useSelector(state => state.TaskReducer);
     const { arrStatus } = useSelector(state => state.StatusReducer);
     const { arrPriority } = useSelector(state => state.PriorityReducer);
+    const { arrTaskType } = useSelector(state => state.TaskTypeReducer);
+    const [visibleEditor, setVisibleEditor ] = useState(false);
+    const [historyContent, sethistoryContent] = useState(taskDetailModal.description);
+    const [content, setContent] = useState(taskDetailModal.description);
+
     const dispatch = useDispatch();
 
     useEffect(() => {
         dispatch({
             type: GET_ALL_STATUS_SAGA
         });
-        dispatch({ 
-            type: GET_ALL_PRIORITY_SAGA 
+        dispatch({
+            type: GET_ALL_PRIORITY_SAGA
         });
+        dispatch({
+            type: GET_ALL_TASK_TYPE_SAGA
+        })
     }, [])
 
     const renderTimeTracking = () => {
-        const {timeTrackingSpent,timeTrackingRemaining} = taskDetailModal;
+        const { timeTrackingSpent, timeTrackingRemaining } = taskDetailModal;
 
         const max = Number(timeTrackingSpent) + Number(timeTrackingRemaining);
-        const percent = Math.round( Number(timeTrackingSpent)/max * 100 )
+        const percent = Math.round(Number(timeTrackingSpent) / max * 100)
 
-        return <div style={{ display: 'flex' }}>
-            <i className="fa fa-clock" />
-            <div style={{ width: '100%' }}>
+        return <div>
+            <div style={{ display: 'flex' }}>
+                <i className="fa fa-clock" />
+                <div style={{ width: '100%' }}>
 
-                <div className="progress">
-                    <div className="progress-bar" role="progressbar" style={{ width: `${percent}%` }} aria-valuenow={Number(timeTrackingSpent)} aria-valuemin={Number(timeTrackingRemaining)} aria-valuemax={max} />
+                    <div className="progress">
+                        <div className="progress-bar" role="progressbar" style={{ width: `${percent}%` }} aria-valuenow={Number(timeTrackingSpent)} aria-valuemin={Number(timeTrackingRemaining)} aria-valuemax={max} />
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                        <p className="logged">{Number(timeTrackingRemaining)}h logged</p>
+                        <p className="estimate-time">{Number(timeTrackingRemaining)}h remaining</p>
+                    </div>
                 </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <p className="logged">{Number(timeTrackingRemaining)}h logged</p>
-                    <p className="estimate-time">{Number(timeTrackingRemaining)}h remaining</p>
+
+            </div>
+            <div className="row">
+
+                <div className="col-6">
+                    <input className="form-control" name="timeTrackingSpent" onChange={handleChange} />
+                </div>
+                <div className="col-6">
+                    <input className="form-control" name="timeTrackingRemaining" onChange={handleChange} />
                 </div>
             </div>
         </div>
+    }
+
+    const renderDescription = () => {
+        const jsxDescription = HtmlParser(taskDetailModal.description);
+        return <div>
+            {visibleEditor ? <div> <Editor
+                name="description"
+                initialValue={taskDetailModal.description}
+                init={{
+                    selector: 'textarea#myTextArea',
+                    height: 500,
+                    menubar: false,
+                    plugins: [
+                        'advlist autolink lists link image charmap print preview anchor',
+                        'searchreplace visualblocks code fullscreen',
+                        'insertdatetime media table paste code help wordcount'
+                    ],
+                    toolbar:
+                        'undo redo | formatselect | bold italic backcolor | \
+                            alignleft aligncenter alignright alignjustify | \
+                            bullist numlist outdent indent | removeformat | help'
+                }}
+                onEditorChange={(content, editor) => {
+                    setContent(content);
+                }}
+            /> 
+            
+            <button className="btn btn-primary m-2" onClick={()=>{
+                dispatch({
+                    type: CHANGE_TASK_MODAL,
+                    name:'description',
+                    value:content
+                })
+                setVisibleEditor(false);
+            }}>Save</button> 
+            <button className="btn btn-primary m-2" onClick={()=>{
+                dispatch({
+                    type: CHANGE_TASK_MODAL,
+                    name:'description',
+                    value:historyContent
+                })
+                setVisibleEditor(false)
+            }}>Close</button> 
+             </div> : <div onClick={() => {
+
+                sethistoryContent(taskDetailModal.description);
+                setVisibleEditor(!visibleEditor);
+
+            }}>{jsxDescription}</div>}
+
+
+        </div>
+    }
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        dispatch({
+            type: CHANGE_TASK_MODAL,
+            name,
+            value
+        })
     }
 
     return (
@@ -50,6 +134,18 @@ export default function ModalCyberBugs(props) {
                     <div className="modal-header">
                         <div className="task-title">
                             <i className="fa fa-bookmark" />
+                            <select onChange={handleChange} name="typeId" value={taskDetailModal.typeId}>
+                                {
+                                    arrTaskType.map((item, index) => {
+                                        return (
+                                            <option key={index} value={item.id}>
+                                                {item.taskType}
+                                            </option>
+
+                                        )
+                                    })
+                                }
+                            </select>
                             <span>{taskDetailModal.taskName}</span>
                         </div>
                         <div style={{ display: 'flex' }} className="task-click">
@@ -74,7 +170,7 @@ export default function ModalCyberBugs(props) {
                                     <p className="issue">This is an issue of type: Task.</p>
                                     <div className="description">
                                         <p>Description</p>
-                                        {HtmlParser(taskDetailModal.description)}
+                                        {renderDescription()}
                                     </div>
                                     <div className="comment">
                                         <h6>Comment</h6>
@@ -107,11 +203,10 @@ export default function ModalCyberBugs(props) {
                                                             adipisicing elit. Repellendus tempora ex
                                                             voluptatum saepe ab officiis alias totam ad
                                                             accusamus molestiae?
-                        </p>
+                                                        </p>
                                                         <div>
-                                                            <span style={{ color: '#929398' }}>Edit</span>
-                          •
-                          <span style={{ color: '#929398' }}>Delete</span>
+                                                            •<span style={{ color: '#929398' }}>Edit</span>
+                                                            •<span style={{ color: '#929398' }}>Delete</span>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -122,16 +217,18 @@ export default function ModalCyberBugs(props) {
                                 <div className="col-4">
                                     <div className="status">
                                         <h6>STATUS</h6>
-                                        <select onChange={(e) => {
-                                            const action = {
-                                                type: UPDATE_STATUS_TASK_SAGA,
-                                                taskUpdateStatus: {
-                                                    taskId: taskDetailModal.taskId,
-                                                    statusId: e.target.value,
-                                                    projectId: taskDetailModal.projectId
-                                                }
-                                            }
-                                            dispatch(action);
+                                        <select name="statusId" onChange={(e) => {
+
+                                            handleChange(e);
+                                            // const action = {
+                                            //     type: UPDATE_STATUS_TASK_SAGA,
+                                            //     taskUpdateStatus: {
+                                            //         taskId: taskDetailModal.taskId,
+                                            //         statusId: e.target.value,
+                                            //         projectId: taskDetailModal.projectId
+                                            //     }
+                                            // }
+                                            // dispatch(action);
                                         }} className="custom-select" value={taskDetailModal.statusId}>
                                             {
                                                 arrStatus.map((item, index) => {
@@ -179,10 +276,12 @@ export default function ModalCyberBugs(props) {
                                     </div> */}
                                     <div className="priority mt-2" style={{ marginBottom: 20 }}>
                                         <h6>PRIORITY</h6>
-                                        <select value={taskDetailModal.priorityTask?.priorityId} onChange={(e) => {}}>
+                                        <select name="priorityId" value={taskDetailModal.priorityId} onChange={(e) => {
+                                            handleChange(e);
+                                        }}>
                                             {
                                                 arrPriority.map((item, index) => {
-                                                    return(
+                                                    return (
                                                         <option key={index} value={item.priorityId}>
                                                             {item.priority}
                                                         </option>
@@ -193,7 +292,9 @@ export default function ModalCyberBugs(props) {
                                     </div>
                                     <div className="estimate">
                                         <h6>ORIGINAL ESTIMATE (HOURS)</h6>
-                                        <input type="text" className="estimate-hours" />
+                                        <input name="originalEstimate" onChange={(e) => {
+                                            handleChange(e);
+                                        }} type="text" className="estimate-hours" />
                                     </div>
                                     <div className="time-tracking">
                                         <h6>TIME TRACKING</h6>
