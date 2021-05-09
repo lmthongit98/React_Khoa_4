@@ -14,6 +14,10 @@ export class TaskService extends baseService {
         return this.put(`Project/updateStatus`, taskStatusUpdate);
     }
 
+    updateTask(taskUpdate){
+        return this.post(`Project/updateTask`, taskUpdate);
+    }
+
 }
 
 
