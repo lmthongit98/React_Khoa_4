@@ -24,6 +24,7 @@ import CreateProject from './pages/CyberBugs/CreateProject/CreateProject'
 import ProjectManagement from './pages/CyberBugs/ProjectManagement/ProjectManagement'
 import DrawerCyberBugs from './HOC/CyberBugsHOC/DrawerCyberBugs'
 import DemoDragDrop from './pages/DemoDragDrop/DemoDragDrop'
+import DragAndDropDND from './pages/DragAndDropDND/DragAndDropDND'
 
 
 function App() {
@@ -44,7 +45,8 @@ function App() {
         <HomeTemplate exact path="/home" Component = {Home} />
         <HomeTemplate exact path='/about' Component={About} />
         <HomeTemplate exact path='/dragdrop' Component={DemoDragDrop} />
-        <UserLoginTemplate exact path='/login' Component={LoginCyberBugs}/>
+        <HomeTemplate exact path='/dragdropdnd' Component={DragAndDropDND} />
+        <UserLoginTemplate exact path='/login' Component={DragAndDropDND}/>
         <HomeTemplate exact path='/contact' Component={Contact} />
         <UserLoginTemplate exact path='/login' Component={Login} />
         <HomeTemplate exact path='/detail/:id' Component={Detail} />

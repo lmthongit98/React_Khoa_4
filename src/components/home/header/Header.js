@@ -33,6 +33,7 @@ export default function Header() {
                             <NavLink className="dropdown-item" to="/todolistsaga">Todo List Redux Saga</NavLink>
                             <NavLink className="dropdown-item" to="/demohocmodal">Demo HOC Modal</NavLink>
                             <NavLink className="dropdown-item" to="/dragdrop">Demo Drag Drop</NavLink>
+                            <NavLink className="dropdown-item" to="/dragdropdnd">Demo Drag Drop DND</NavLink>
                         </div>
                     </li>
 
