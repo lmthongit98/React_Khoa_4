@@ -46,7 +46,7 @@ function App() {
         <HomeTemplate exact path='/about' Component={About} />
         <HomeTemplate exact path='/dragdrop' Component={DemoDragDrop} />
         <HomeTemplate exact path='/dragdropdnd' Component={DragAndDropDND} />
-        <UserLoginTemplate exact path='/login' Component={DragAndDropDND}/>
+        <UserLoginTemplate exact path='/login' Component={LoginCyberBugs}/>
         <HomeTemplate exact path='/contact' Component={Contact} />
         <UserLoginTemplate exact path='/login' Component={Login} />
         <HomeTemplate exact path='/detail/:id' Component={Detail} />
