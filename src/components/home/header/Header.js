@@ -22,6 +22,9 @@ export default function Header() {
                         <NavLink activeClassName="active" className="nav-link" to="/login">Login</NavLink>
                     </li>
                     <li className="nav-item">
+                        <NavLink activeClassName="active" className="nav-link" to="/projectmanagement">Cyberbug</NavLink>
+                    </li>
+                    <li className="nav-item">
                         <NavLink activeClassName="active" className="nav-link" to="/detail/3">Detail</NavLink>
                     </li>
                     <li className="nav-item dropdown">
